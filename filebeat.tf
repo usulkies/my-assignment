@@ -121,7 +121,7 @@ resource "kubernetes_config_map_v1" "filebeat-config" {
       - type: filestream
         id: kubernetes-container-logs
         paths:
-          - /var/log/containers/*/*.log
+          - /var/log/containers/*.log
         parsers:
           - container: ~
         prospector:
