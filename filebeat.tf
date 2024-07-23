@@ -136,25 +136,6 @@ resource "kubernetes_config_map_v1" "filebeat-config" {
               - logs_path:
                   logs_path: "/var/log/containers/"
 
-      # To enable hints based autodiscover, remove `filebeat.inputs` configuration and uncomment this:
-      # filebeat.autodiscover:
-      #  providers:
-      #    - type: kubernetes
-      #      node: $${NODE_NAME}
-      #      hints.enabled: true
-      #      hints.default_config:
-      #        type: filestream
-      #        id: kubernetes-container-logs-$${data.kubernetes.pod.name}-$${data.kubernetes.container.id}
-      #        paths:
-      #        - /var/log/containers/*-$${data.kubernetes.container.id}.log
-      #        parsers:
-      #        - container: ~
-      #        prospector:
-      #         scanner:
-      #           fingerprint.enabled: true
-      #           symlinks: true
-      #        file_identity.fingerprint: ~
-
       processors:
         - add_cloud_metadata:
         - add_host_metadata:
@@ -211,7 +192,7 @@ resource "kubernetes_daemon_set_v1" "filebeat" {
             value = "elastic"
           }
           env {
-            name = "ELASTICSEARCH_PASSWORD"
+            name  = "ELASTICSEARCH_PASSWORD"
             value = random_password.elasticsearch_password.result
           }
           env {

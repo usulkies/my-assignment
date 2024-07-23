@@ -273,7 +273,7 @@ resource "kubernetes_deployment_v1" "kibana" {
             }
           }
           env {
-            name = "SERVER_HOST"
+            name  = "SERVER_HOST"
             value = "0.0.0.0"
           }
           port {
@@ -302,10 +302,10 @@ resource "kubernetes_deployment_v1" "kibana" {
             initial_delay_seconds = 30
             period_seconds        = 10
           }
-#           volume_mount {
-#             name       = "elasticsearch-certs"
-#             mount_path = "/usr/share/kibana/config/certs"
-#           }
+          #           volume_mount {
+          #             name       = "elasticsearch-certs"
+          #             mount_path = "/usr/share/kibana/config/certs"
+          #           }
           volume_mount {
             name       = "kibana-tokens"
             mount_path = "/usr/share/kibana/config/tokens"
@@ -315,12 +315,12 @@ resource "kubernetes_deployment_v1" "kibana" {
           name = "kibana-tokens"
           empty_dir {}
         }
-#         volume {
-#           name = "elasticsearch-certs"
-#           secret {
-#             secret_name = kubernetes_secret_v1.elasticsearch_credentials.metadata[0].name
-#           }
-#         }
+        #         volume {
+        #           name = "elasticsearch-certs"
+        #           secret {
+        #             secret_name = kubernetes_secret_v1.elasticsearch_credentials.metadata[0].name
+        #           }
+        #         }
         volume {
           name = "kibanaconfig"
           config_map {

@@ -86,12 +86,15 @@ module "eks" {
       ami_type       = "BOTTLEROCKET_x86_64"
       instance_types = ["t3a.medium"]
       capacity_type  = "SPOT"
-      min_size = 1
-      max_size = 6
-      desired_size = 2
+      min_size       = 1
+      max_size       = 6
+      desired_size   = 2
       launch_template_tags = {
         "k8s.io/cluster-autoscaler/enabled" : true,
         "k8s.io/cluster-autoscaler/${local.name}" : "owned",
+      }
+      iam_role_additional_policies = {
+        AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
       }
     }
   }
