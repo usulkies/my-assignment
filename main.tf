@@ -145,7 +145,7 @@ resource "kubernetes_stateful_set_v1" "elasticsearch" {
         access_modes       = ["ReadWriteOnce"]
         resources {
           requests = {
-            storage = "1Gi"
+            storage = "30Gi"
           }
         }
       }
@@ -302,10 +302,7 @@ resource "kubernetes_deployment_v1" "kibana" {
             initial_delay_seconds = 30
             period_seconds        = 10
           }
-          #           volume_mount {
-          #             name       = "elasticsearch-certs"
-          #             mount_path = "/usr/share/kibana/config/certs"
-          #           }
+
           volume_mount {
             name       = "kibana-tokens"
             mount_path = "/usr/share/kibana/config/tokens"
@@ -315,12 +312,6 @@ resource "kubernetes_deployment_v1" "kibana" {
           name = "kibana-tokens"
           empty_dir {}
         }
-        #         volume {
-        #           name = "elasticsearch-certs"
-        #           secret {
-        #             secret_name = kubernetes_secret_v1.elasticsearch_credentials.metadata[0].name
-        #           }
-        #         }
         volume {
           name = "kibanaconfig"
           config_map {
@@ -350,4 +341,3 @@ resource "kubernetes_service_v1" "kibana" {
   }
 }
 
-### Hello World application deployment with nice logs ###

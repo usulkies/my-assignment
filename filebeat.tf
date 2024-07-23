@@ -6,8 +6,8 @@ resource "kubernetes_service_account_v1" "filebeat" {
       k8s-app = "filebeat"
     }
   }
-
 }
+
 resource "kubernetes_cluster_role_v1" "filebeat" {
   metadata {
     name = "filebeat"
@@ -129,24 +129,25 @@ resource "kubernetes_config_map_v1" "filebeat-config" {
             fingerprint.enabled: true
             symlinks: true
         file_identity.fingerprint: ~
+        close_inactive: 5m
+        close_renamed: true
+        close_removed: true
         processors:
           - add_kubernetes_metadata:
               host: $${NODE_NAME}
-              matchers:
-              - logs_path:
-                  logs_path: "/var/log/containers/"
+              default_indexers.enabled: true
+              default_matchers.enabled: true
 
       processors:
-        - add_cloud_metadata:
         - add_host_metadata:
-
-      cloud.id: $${ELASTIC_CLOUD_ID}
-      cloud.auth: $${ELASTIC_CLOUD_AUTH}
 
       output.elasticsearch:
         hosts: ['$${ELASTICSEARCH_HOST:elasticsearch}:$${ELASTICSEARCH_PORT:9200}']
         username: $${ELASTICSEARCH_USERNAME}
         password: $${ELASTICSEARCH_PASSWORD}
+
+      logging:
+        level: debug
   EOF
   }
 }
@@ -215,12 +216,10 @@ resource "kubernetes_daemon_set_v1" "filebeat" {
             run_as_user = 0
           }
           resources {
-            limits = {
-              memory = "200Mi"
-            }
+            limits = {}
             requests = {
-              cpu    = "100m"
-              memory = "100Mi"
+              cpu    = "200m"
+              memory = "200Mi"
             }
           }
           volume_mount {
